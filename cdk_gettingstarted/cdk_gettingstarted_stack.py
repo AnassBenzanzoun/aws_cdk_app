@@ -30,7 +30,9 @@ class CdkGettingstartedStack(Stack):
             integration=api.HttpIntegration(
                 self, "MyHttpIntegration",
                 integration_type=api.HttpIntegrationType.AWS_PROXY,
-                integration_uri=my_lambda.function_arn,
                 http_api=my_api
             )
         )
+        
+
+        
