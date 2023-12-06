@@ -1,14 +1,38 @@
+import boto3
+import json
+
+# Create a DynamoDB resource
+dynamodb = boto3.resource("dynamodb")
+
+
 def lambda_handler(event, context):
     try:
-        # Your actual code implementation here
-        result = {
+        # Define the DynamoDB table
+        table_name = "YourDynamoDBTableName"  # Replace with your table name
+        table = dynamodb.Table(table_name)
+
+        # Scan the DynamoDB table to retrieve all items
+        response = table.scan()
+
+        # Extract the items from the response
+        items = response["Items"]
+
+        # Prepare the response containing the items as JSON
+        json_response = {
             "statusCode": 200,
             "headers": {"Content-Type": "application/json"},
-            "body": '{"mock_data": "Hello, this is mock data!"}',
+            "body": json.dumps(items),
         }
-        return result
+
+        return json_response
+
     except Exception as e:
         # Log the exception for debugging purposes
         print(f"Exception: {e}")
+
         # Return a meaningful error response
-        return {"statusCode": 500, "body": "Internal Server Error"}
+        error_response = {
+            "statusCode": 500,
+            "body": json.dumps({"error": "Internal Server Error"}),
+        }
+        return error_response

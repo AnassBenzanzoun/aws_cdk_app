@@ -3,6 +3,7 @@ from aws_cdk import (
     aws_lambda as lambda_,
     aws_apigateway as apigw,
     aws_iam as iam,
+    aws_dynamodb as dynamodb,
 )
 from constructs import Construct
 
@@ -40,3 +41,14 @@ class CdkGettingstartedStack(Stack):
         get_widgets_integration = apigw.LambdaIntegration(my_lambda)
 
         api.root.add_method("GET", get_widgets_integration)  # GET /
+
+        table = dynamodb.TableV2(
+            self,
+            "Table",
+            partition_key=dynamodb.Attribute(
+                name="pk", type=dynamodb.AttributeType.STRING
+            ),
+            contributor_insights=True,
+            table_class=dynamodb.TableClass.STANDARD_INFREQUENT_ACCESS,
+            point_in_time_recovery=True,
+        )
